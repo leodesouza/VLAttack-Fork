@@ -23,6 +23,7 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 import torch
+import torch_xla.core.xla_model as xm
 import torch.backends.cudnn as cudnn
 from models.blip_vqa import blip_vqa
 import utils
@@ -41,7 +42,8 @@ def init_tokenizer():
 
 def main(args, config, config_pretrain):
     utils.init_distributed_mode(args)
-    device = torch.device(args.device)
+    # device = torch.device(args.device)
+    device = xm.xla_device()
     # fix the seed for reproducibility
     seed = args.seed + utils.get_rank()
     torch.manual_seed(seed)
